@@ -1,47 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Article | My Blog</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Article</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.4/dist/tailwind.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
-<body class="bg-gray-50 text-gray-900">
-  <nav class="bg-white shadow p-4 flex justify-between">
-    <h1 class="font-bold text-xl">My Blog</h1>
-    <div class="space-x-4">
-      <a href="index.html">Home</a>
-      <a href="articles.html">Articles</a>
-      <a href="team.html">Team</a>
-      <a href="about.html">About</a>
-    </div>
-  </nav>
+<body class="bg-gray-50 text-gray-800">
 
-  <article class="p-6 max-w-3xl mx-auto bg-white mt-6 rounded-lg shadow">
-    <img id="article-image" class="w-full h-64 object-cover rounded mb-4" alt="">
-    <h1 id="article-title" class="text-3xl font-bold mb-2"></h1>
-    <p id="article-meta" class="text-gray-500 text-sm mb-4"></p>
-    <div id="article-content" class="prose"></div>
-  </article>
+<div class="max-w-3xl mx-auto p-6">
+  <article id="article"></article>
+</div>
 
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const slug = params.get('slug');
+<script>
+async function loadArticle() {
+  const params = new URLSearchParams(location.search);
+  const slug = params.get('slug');
+  if (!slug) return;
 
-    fetch('data/articles.json')
-      .then(res => res.json())
-      .then(articles => {
-        const article = articles.find(a => a.slug === slug);
-        if (article) {
-          document.title = article.title + " | My Blog";
-          document.getElementById('article-image').src = article.image;
-          document.getElementById('article-title').innerText = article.title;
-          document.getElementById('article-meta').innerText = `By ${article.author} • ${article.date}`;
-          document.getElementById('article-content').innerHTML = article.content;
-        } else {
-          document.body.innerHTML = "<h2 class='text-center mt-20 text-2xl'>Article not found.</h2>";
-        }
-      });
-  </script>
+  const res = await fetch(`/content/articles/${slug}.md`);
+  const md = await res.text();
+  const body = md.replace(/---[\s\S]*?---/, '');
+  const html = marked.parse(body);
+
+  document.getElementById('article').innerHTML = html;
+}
+loadArticle();
+</script>
+
 </body>
 </html>

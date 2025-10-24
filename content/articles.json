@@ -1,0 +1,14 @@
+[
+  {
+    "slug": "welcome",
+    "title": "Welcome to Our Blog",
+    "image": "/content/images/blog1.jpg",
+    "excerpt": "A quick overview of our new blog website powered by Pages CMS."
+  },
+  {
+    "slug": "example-article",
+    "title": "Example Article",
+    "image": "/content/images/blog2.jpg",
+    "excerpt": "This is another article to test the blog."
+  }
+]
